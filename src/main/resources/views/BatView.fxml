@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Point3D?>
+<?import javafx.scene.PerspectiveCamera?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Box?>
+
+<AnchorPane fx:id="anchorPane" prefHeight="300.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.pucmm.smarthit.controller.BatViewController">
+   <children>
+      <PerspectiveCamera fx:id="camera" layoutX="175.0" layoutY="127.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <Box fx:id="batBox" depth="20.0" height="20.0" layoutX="175.0" layoutY="150.0" rotate="50.0" width="200.0">
+         <rotationAxis>
+            <Point3D x="-50.0" y="36.0" z="133.0" />
+         </rotationAxis>
+      </Box>
+   </children>
+</AnchorPane>
