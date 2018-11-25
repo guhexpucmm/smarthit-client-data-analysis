@@ -4,6 +4,7 @@ import edu.pucmm.smarthit.binding.DataModelBinding;
 import edu.pucmm.smarthit.binding.MainViewBinding;
 import edu.pucmm.smarthit.binding.PlayerModelBinding;
 import edu.pucmm.smarthit.binding.SensorModelBinding;
+import edu.pucmm.smarthit.model.DataModel;
 import edu.pucmm.smarthit.model.SensorModel;
 import edu.pucmm.smarthit.util.BatStageUtil;
 import edu.pucmm.smarthit.util.FileUtil;
@@ -24,8 +25,13 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.apache.commons.io.FilenameUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.security.Timestamp;
 import java.time.Instant;
@@ -345,18 +351,61 @@ public class MainViewController implements Initializable {
                 if (parents != null) {
                     for (File p : parents) {
                         if (FilenameUtils.getExtension(p.getName()).equals("json"))
-                            listViewSessions.getItems().add(p.getName() + " (Actualizado en: " + Instant.ofEpochMilli(p.lastModified()).atZone(ZoneId.systemDefault()).toLocalDateTime().format(DateTimeFormatter.ofPattern("mm-dd-yyyy")) + ")");
+                            listViewSessions.getItems().add(p.getName() + " (Actualizado en: " + Instant.ofEpochMilli(p.lastModified()).atZone(ZoneId.systemDefault()).toLocalDateTime().format(DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm:ss a")) + ")");
                     }
                 }
             }
         });
 
         listViewSessions.setOnMouseClicked(event -> {
+            String path = PLAYERS_PATH + "/" + PlayerModelBinding.getInstance().playerModelObjectPropertyProperty().get().getCode() + "/" + listViewYears.selectionModelProperty().get().selectedItemProperty().get() + "/" + listViewMonths.selectionModelProperty().get().selectedItemProperty().get() + "/" + listViewDays.selectionModelProperty().get().selectedItemProperty().get() + "/";
+
             if (event.getClickCount() == 2 && event.getEventType().equals(MouseEvent.MOUSE_CLICKED)) {
-                String current = listViewSessions.selectionModelProperty().getValue().getSelectedItem();
+                String current = path + listViewSessions.selectionModelProperty().getValue().getSelectedItem().split(" ")[0];
 
                 if (current != "") {
-                    current = current.split(" ")[0];
+                    try {
+                        JSONObject jsonObject = new JSONObject(new JSONTokener(new FileInputStream(new File(current))));
+
+                        DataModel dataModel = new DataModel();
+                        dataModel.estimatedImpactTimeProperty().setValue(jsonObject.getString("impact"));
+                        dataModel.velocityProperty().set(String.valueOf(jsonObject.getDouble("velocity")));
+
+                        JSONArray jsonArray = jsonObject.getJSONArray("metrics");
+
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject object = (JSONObject) jsonArray.get(i);
+
+                            SensorModel sensorModel = new SensorModel();
+
+                            String accX = String.valueOf(object.getDouble("accX"));
+                            String accY = String.valueOf(object.getDouble("accY"));
+                            String accZ = String.valueOf(object.getDouble("accZ"));
+
+                            sensorModel.accelerationProperty().setValue(String.join(",", accX, accY, accZ));
+
+                            String velX = String.valueOf(object.getDouble("velX"));
+                            String velY = String.valueOf(object.getDouble("velY"));
+                            String velZ = String.valueOf(object.getDouble("velZ"));
+
+                            sensorModel.angularVelocityProperty().setValue(String.join(",", velX, velY, velZ));
+
+                            String angX = String.valueOf(object.getDouble("angX"));
+                            String angY = String.valueOf(object.getDouble("angY"));
+                            String angZ = String.valueOf(object.getDouble("angZ"));
+
+                            sensorModel.angleProperty().setValue(String.join(",", angX, angY, angZ));
+
+                            sensorModel.timeProperty().setValue(object.getString("time"));
+                            sensorModel.dateProperty().setValue(object.getString("date"));
+
+                            dataModel.listPropertyProperty().add(sensorModel);
+                        }
+
+                        DataModelBinding.getInstance().dataModelObjectPropertyProperty().set(dataModel);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
 
                     new SessionStageUtil();
                 }

@@ -45,6 +45,22 @@ public class DataModel {
     }
 
     public StringProperty accelerationAvgProperty() {
+        Float resultX = new Float(0.0f);
+        Float resultY = new Float(0.0f);
+        Float resultZ = new Float(0.0f);
+
+        for (SensorModel sensorModel : this.listPropertyProperty().get()) {
+            resultX += Float.parseFloat(sensorModel.getAcceleration().split(",")[0]);
+            resultY += Float.parseFloat(sensorModel.getAcceleration().split(",")[1]);
+            resultZ += Float.parseFloat(sensorModel.getAcceleration().split(",")[2]);
+        }
+
+        resultX = resultX / this.listPropertyProperty().size();
+        resultY = resultY / this.listPropertyProperty().size();
+        resultZ = resultZ / this.listPropertyProperty().size();
+
+        accelerationAvg.setValue(String.join(",", resultX.toString(), resultY.toString(), resultZ.toString()));
+
         return accelerationAvg;
     }
 
@@ -57,6 +73,22 @@ public class DataModel {
     }
 
     public StringProperty angularVelocityAvgProperty() {
+        Float resultX = new Float(0.0f);
+        Float resultY = new Float(0.0f);
+        Float resultZ = new Float(0.0f);
+
+        for (SensorModel sensorModel : this.listPropertyProperty().get()) {
+            resultX += Float.parseFloat(sensorModel.getAngularVelocity().split(",")[0]);
+            resultY += Float.parseFloat(sensorModel.getAngularVelocity().split(",")[1]);
+            resultZ += Float.parseFloat(sensorModel.getAngularVelocity().split(",")[2]);
+        }
+
+        resultX = resultX / this.listPropertyProperty().size();
+        resultY = resultY / this.listPropertyProperty().size();
+        resultZ = resultZ / this.listPropertyProperty().size();
+
+        angularVelocityAvg.setValue(String.join(",", resultX.toString(), resultY.toString(), resultZ.toString()));
+
         return angularVelocityAvg;
     }
 
@@ -69,6 +101,22 @@ public class DataModel {
     }
 
     public StringProperty angleAvgProperty() {
+        Float resultX = new Float(0.0f);
+        Float resultY = new Float(0.0f);
+        Float resultZ = new Float(0.0f);
+
+        for (SensorModel sensorModel : this.listPropertyProperty().get()) {
+            resultX += Float.parseFloat(sensorModel.getAngle().split(",")[0]);
+            resultY += Float.parseFloat(sensorModel.getAngle().split(",")[1]);
+            resultZ += Float.parseFloat(sensorModel.getAngle().split(",")[2]);
+        }
+
+        resultX = resultX / this.listPropertyProperty().size();
+        resultY = resultY / this.listPropertyProperty().size();
+        resultZ = resultZ / this.listPropertyProperty().size();
+
+        angleAvg.setValue(String.join(",", resultX.toString(), resultY.toString(), resultZ.toString()));
+
         return angleAvg;
     }
 

@@ -16,7 +16,7 @@ public class Main extends Application {
     public static void main(String[] args) {
         Thread thread = new Thread(Sensor::new);
         thread.setName("sensor");
-        thread.start();
+//        thread.start();
         Application.launch(args);
     }
 

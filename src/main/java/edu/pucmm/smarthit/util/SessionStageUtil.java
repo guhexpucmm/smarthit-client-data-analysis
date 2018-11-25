@@ -10,12 +10,12 @@ public class SessionStageUtil {
         Stage stage = new Stage(StageStyle.DECORATED);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("Visualización de métrica");
-        stage.setMinWidth(500);
-        stage.setMinHeight(500);
-        stage.setWidth(500);
-        stage.setHeight(500);
-        stage.setMaxWidth(500);
-        stage.setMaxHeight(500);
+        stage.setMinWidth(700);
+        stage.setMinHeight(720);
+        stage.setWidth(700);
+        stage.setHeight(720);
+        stage.setMaxWidth(700);
+        stage.setMaxHeight(720);
         stage.toFront();
         stage.setScene(new SceneUtil(Views.SESSION_VIEW).loadScene());
         stage.show();
